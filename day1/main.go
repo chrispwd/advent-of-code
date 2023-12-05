@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 )
 
@@ -13,35 +14,24 @@ func main() {
 	if err != nil {
 		log.Fatalf("readLines: %s", err)
 	}
-	calibrateDocument(document)
+	fmt.Println(calibrateDocument(document))
 }
 
-// TODO :: Figure out solution
-func calibrateDocument(doc []string) {
+// TODO :: Finish Part 2
+func calibrateDocument(doc []string) int {
 	var acc int = 0
-	// var numStr string
-	// var fdi int // first digit index
-	// var ldi int // last digit index
 	_ = acc
 	for i, line := range doc {
 		_ = i
-		for j, ch := range line {
-			_ = j
-			s := string(ch)
-			num, err := strconv.Atoi(s)
-			if err != nil {
-				//	fdi++
-				continue
-			}
-			// if fdi < j {
-			// 	fdi = j
-			// }
-			// switch num {
-
-			// }
-			fmt.Println(num)
+		re := regexp.MustCompile(`([0-9]){1}`)
+		nums := re.FindAllString(line, -1)
+		num, err := strconv.Atoi(fmt.Sprintf("%v%v", nums[0], nums[len(nums)-1]))
+		if err != nil {
+			continue
 		}
+		acc += num
 	}
+	return acc
 }
 
 // readLines reads a whole file into memory
