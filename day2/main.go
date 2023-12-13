@@ -8,6 +8,10 @@ import (
 	// "regexp"
 )
 
+const R int = 12
+const G int = 13
+const B int = 14
+
 func main() {
 	games, err := readLines("input.txt")
 	if err != nil {
@@ -17,8 +21,20 @@ func main() {
 	fmt.Println("Sum of Valid Game IDs:", gameSum(games))
 }
 
+// Part 1
 func gameSum(games []string) int {
 	// TODO :: you are here
+	for _, line := range games {
+
+		// capture gameID (quick regex?)
+		// Split the sets by semicolon
+		// Split the colors
+		// Compare if colcount > constants, skip line
+
+		// DEBUG
+		fmt.Println(line)
+
+	}
 	return 0
 }
 
