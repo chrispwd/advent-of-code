@@ -20,30 +20,41 @@ var validation = map[string]int{
 // const B int = 14
 
 func main() {
-	games, err := readLines("input.txt")
+	gameLog, err := readLines("input.txt")
 	if err != nil {
 		log.Fatalf("readLines: %s", err)
 	}
 	fmt.Println(asciiArt())
-	fmt.Println("Sum of Valid Game IDs:", gameSum(games, validation))
+	fmt.Println("Sum of Valid Game IDs:", gameSum(gameLog, validation))
 }
 
 // Part 1
-func gameSum(games []string, validation map[string]int) int {
+func gameSum(gameLog []string, validation map[string]int) int {
 	// TODO :: you are here
 	gameAcc := 0
-	for _, line := range games {
-
-		// capture gameID (quick regex?)
-		re := regexp.MustCompile(`[0-9]+`)
-		var gId, _ = strconv.Atoi(re.FindString(line))
+	for _, line := range gameLog {
+		// game Ids
+		reId := regexp.MustCompile(`[0-9]+`)
+		var gId, _ = strconv.Atoi(reId.FindString(line))
 		// Split the sets by semicolon
+		reRgb := regexp.MustCompile(`(\w+[;]*)+`)
+		var gRgb []string = reRgb.FindAllString(line, -1)[2:]
+		// TODO :: Figure out how to split up the games
+		// var gameSets [][]string
+		// var lastGame int
+		// for i, game := range gRgb {
+		// 	if string(game[len(game)-1]) == ";" {
+
+		// 	}
+		// }
+
 		// Split the colors
 		// Compare if colcount > constants, skip line
 
 		// DEBUG
 		gameAcc += gId
 		fmt.Println(line)
+		fmt.Println(gRgb)
 	}
 	return gameAcc
 }
