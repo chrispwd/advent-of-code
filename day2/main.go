@@ -32,31 +32,69 @@ func main() {
 func gameSum(gameLog []string, validation map[string]int) int {
 	// TODO :: you are here
 	gameAcc := 0
+	valid := false
+
 	for _, line := range gameLog {
-		// game Ids
-		reId := regexp.MustCompile(`[0-9]+`)
-		var gId, _ = strconv.Atoi(reId.FindString(line))
-		// Split the sets by semicolon
-		reRgb := regexp.MustCompile(`(\w+[;]*)+`)
-		var gRgb []string = reRgb.FindAllString(line, -1)[2:]
-		// TODO :: Figure out how to split up the games
-		// var gameSets [][]string
-		// var lastGame int
-		// for i, game := range gRgb {
-		// 	if string(game[len(game)-1]) == ";" {
-
-		// 	}
-		// }
-
-		// Split the colors
-		// Compare if colcount > constants, skip line
-
 		// DEBUG
-		gameAcc += gId
 		fmt.Println(line)
-		fmt.Println(gRgb)
+		
+		reId := regexp.MustCompile(`[0-9]+`) // game Ids
+		var gId, _ = strconv.Atoi(reId.FindString(line))
+		reRgb := regexp.MustCompile(`(\w+[;]*)+`) // Split the sets by semicolon
+		var gRgb []string = reRgb.FindAllString(line, -1)[2:]
+		var gameSets [][]string
+		var lastGameIdx int
+
+		for i, game := range gRgb {
+			if string(game[len(game)-1]) == ";" {
+				gameSets = append(gameSets, gRgb[lastGameIdx:i+1])
+				lastGameIdx = i + 1
+			}
+		}
+
+		outer:
+		for _, set := range gameSets {
+			for k, pull := range set {
+				colorRe := regexp.MustCompile(`(red|green|blue)`)
+				color := colorRe.FindString(string(pull))
+				if len(color) > 0 { // on a color
+					colorAmt, _ := strconv.Atoi(set[k-1]) // such that set[k-1] = 1 in [1 green]
+					valid = isValidGame(colorAmt, color, validation)
+					if !valid {
+						break outer
+					}
+				}
+			}
+
+		}
+		fmt.Printf("%d red, %d green, %d blue - %v\n", validation["R"], validation["G"], validation["B"], valid)
+		// TODO :: Figure out why this is not adding up correctly
+		if valid {
+			fmt.Println("Adding ID", gId)
+			gameAcc += gId
+		}
 	}
+	
 	return gameAcc
+}
+
+func isValidGame(num int, color string,  validation map[string]int) bool {
+	validity := false
+	switch color {
+	case "red":
+		if num <= validation["R"] {
+			validity = true
+		}
+	case "green":
+		if num <= validation["G"] {
+			validity = true
+		}
+	case "blue":
+		if num <= validation["B"] {
+			validity = true
+		}
+	}
+	return validity
 }
 
 func readLines(path string) ([]string, error) {
