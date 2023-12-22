@@ -23,12 +23,8 @@ func calibrateDocument(doc []string) int {
 	_ = acc
 	for i, line := range doc {
 		_ = i
-		// DEBUG
-		// fmt.Println("BEGIN:", line)
 		strNums := unspell(line)
 		intNums, err := strconv.Atoi(fmt.Sprintf("%v%v", strNums[0], strNums[len(strNums)-1]))
-		// DEBUG
-		// fmt.Println("END:", intNums)
 		if err != nil {
 			continue
 		}
@@ -43,8 +39,7 @@ func unspell(line string) []string {
 	for true {
 		var match string = re.FindString(line)
 		var loc []int = re.FindStringIndex(line)
-		// DEBUG
-		// fmt.Println("match:", match)
+
 		if loc == nil {
 			break
 		}
@@ -80,9 +75,6 @@ func unspell(line string) []string {
 			raw = append(raw, match)
 			line = line[loc[1]:]
 		}
-		// DEBUG
-		// fmt.Println("after switch:", line)
-		// fmt.Println("raw:", raw)
 	}
 	return raw
 }
